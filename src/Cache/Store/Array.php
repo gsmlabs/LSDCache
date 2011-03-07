@@ -1,35 +1,41 @@
 <?php
 class Cache_Store_Array implements Cache_Store {
 
-  private $array = array();
-  private $ttls = array();
+  private $values = array();
+  private $expiration_timestamps = array();
+
+  public function get($key) {
+    if (!isset($this->values[$key]) || !isset($this->expiration_timestamps[$key])) {
+      return false;
+    }
+
+    if (time() > $this->expiration_timestamps[$key]) {
+      unset($this->values[$key]);
+      return false;
+    }
+
+    return $this->values[$key];
+  }
+
+  public function set($key, $value, $ttl = 0) {
+    $this->values[$key] = $value;
+    $this->expiration_timestamps[$key] = time() + $ttl;
+    return true;
+  }
 
   public function add($key, $value, $ttl = 0) {
-    if (!isset($this->array[$key])) {
+    if (!isset($this->values[$key])) {
       return $this->set($key, $value, $ttl);
     }
     return false;
   }
 
-  public function set($key, $value, $ttl = 0) {
-    $this->array[$key] = array($value, time() + $ttl);
-    $this->ttls[$key] = $ttl;
-    return true;
-  }
-
-  public function get($key) {
-    if (!isset($this->array[$key]) || !isset($this->ttls[$key])) {
-      return false;
+  public function delete($key) {
+    if (isset($this->values[$key])) {
+      unset($this->values[$key]);
+      return true;
     }
-
-    list($value, $expiration_time) = $this->array[$key];
-
-    if (time() > $this->ttls[$key]) {
-      unset($this->array[$key]);
-      return false;
-    }
-
-    return $value;
+    return false;
   }
-
+  
 }
