@@ -5,6 +5,7 @@ class Cache_Cache {
 
   private $lock_ttl = 30;
   private $lock_key_suffix = '.lock';
+  private $deadlock_handler;
   
   public function  __construct(Cache_Store $store) {
     $this->store = $store;
@@ -15,11 +16,8 @@ class Cache_Cache {
   }
 
   public function set($key, $value, $ttl = 0, $generation_time = NULL) {
-    $vo = new Cache_Value($value, time() + $ttl);
-    if ($generation_time === NULL) {
-      $generation_time = $ttl;
-    }
-    $result = $this->store->set($key, $vo, $ttl + $generation_time);
+    $vo = new Cache_Value($value, $ttl, $generation_time = NULL);
+    $result = $this->store->set($key, $vo, $vo->getExpirationTimestamp() + $vo->getGenerationTime());
     $this->unlock($key);
     return $result;
   }
@@ -37,7 +35,7 @@ class Cache_Cache {
         return $vo->getValue();
       }
       else {
-        throw new Exception($key.' locked and no value to return');
+        return $this->getDeadlockHandler()->handle($this, $key, $vo);
       }
     }
 
@@ -48,7 +46,7 @@ class Cache_Cache {
     $result = $this->get($key);
     if ($result === false) {
       $value = call_user_func($callback);
-      $this->cache->set($key, $value, $ttl);
+      return $this->set($key, $value, $ttl);
     }
   }
 
@@ -75,6 +73,17 @@ class Cache_Cache {
    */
   private function isCacheValue($vo) {
     return ($vo !== false && $vo instanceof Cache_Value);
+  }
+
+  public function getDeadlockHandler() {
+    if (!$this->deadlock_handler) {
+      $this->deadlock_handler = new Cache_DeadlockHandler_False();
+    }
+    return $this->deadlock_handler;
+  }
+
+  public function setDeadlockHandler(Cache_DeadlockHandler $deadlock_handler) {
+    $this->deadlock_handler = $deadlock_handler;
   }
   
 }
