@@ -7,16 +7,21 @@ class Cache_Store_Memcache implements Cache_Store {
     $this->memcache = $memcache;
   }
 
+  public function get($key) {
+    return $this->memcache->get($key);
+  }
+
   public function set($key, $value, $ttl = 0) {
     return $this->memcache->set($key, $value, 0, $ttl);
   }
 
-  public function get($key) {
-    return $this->memcache->get($key);
-  }
-  
   public function add($key, $value, $ttl = 0) {
     return $this->memcache->add($key, $value, 0, $ttl);
+  }
+
+  public function delete($key) {
+    // workaround for memcache "delete" issue
+    return $this->memcache->set($key, false, 0, 1);
   }
 
 }
