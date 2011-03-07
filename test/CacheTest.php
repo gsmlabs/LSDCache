@@ -4,6 +4,9 @@ require_once dirname(__FILE__).'/../src/Cache/Cache.php';
 require_once dirname(__FILE__).'/../src/Cache/Value.php';
 require_once dirname(__FILE__).'/../src/Cache/Store.php';
 require_once dirname(__FILE__).'/../src/Cache/Store/Array.php';
+require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler.php';
+require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler/Exception.php';
+require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler/False.php';
 
 class CacheTest extends PHPUnit_Framework_TestCase {
 
@@ -14,7 +17,7 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $store = new Cache_Store_Array();
     $cache = new Cache_Cache($store);
 
-    $store->set($key, new Cache_Value($value, time()+3600));
+    $store->set($key, new Cache_Value($value, 3600));
 
     $result = $cache->get($key);
     $this->assertEquals($value, $result);
@@ -81,7 +84,7 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($value, $cache->get($key));
   }
 
-  public function testThrowsExceptionWhenLockIsSetAndStaleValueIsNotPresent() {
+  public function testReturnsFalseWhenLockIsSetAndStaleValueIsNotPresent() {
     $key = 'krakow';
     $value = 'wisla';
 
@@ -90,8 +93,41 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 
     $store->set($cache->lockKey($key), true); // other process sets a lock
     
-    $this->setExpectedException('Exception');
+    $this->assertFalse($cache->get($key));
+  }
+
+  public function testCanSetCustomDeadlockHandler() {
+    $cache = new Cache_Cache(new Cache_Store_Array());
+
+    $deadlock_handler = new Cache_DeadlockHandler_False();
+    $cache->setDeadlockHandler($deadlock_handler);
+    $this->assertSame($deadlock_handler, $cache->getDeadlockHandler());
+
+    $deadlock_handler = new Cache_DeadlockHandler_Exception();
+    $cache->setDeadlockHandler($deadlock_handler);
+    $this->assertSame($deadlock_handler, $cache->getDeadlockHandler());
+  }
+
+  public function testCanGetStore() {
+    $store = new Cache_Store_Array();
+    $cache = new Cache_Cache($store);
+
+    $this->assertSame($store, $cache->getStore());
+  }
+
+  public function testCanGetAndSetViaCallback() {
+    $key = $value = 'lisboa';
+
+    $store = new Cache_Store_Array();
+    $cache = new Cache_Cache($store);
+
+    $cache->getOrSet($key, array($this, 'getOrSetCallback'), 3600);
     $this->assertEquals($value, $cache->get($key));
+  }
+
+  public function getOrSetCallback() {
+    $key = $value = 'lisboa';
+    return $value;
   }
 
 }

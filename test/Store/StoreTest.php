@@ -6,6 +6,8 @@ require_once dirname(__FILE__).'/../../src/Cache/Store.php';
 require_once dirname(__FILE__).'/../../src/Cache/Store/Apc.php';
 require_once dirname(__FILE__).'/../../src/Cache/Store/Array.php';
 require_once dirname(__FILE__).'/../../src/Cache/Store/Memcache.php';
+require_once dirname(__FILE__).'/../../src/Cache/DeadlockHandler.php';
+require_once dirname(__FILE__).'/../../src/Cache/DeadlockHandler/Exception.php';
 
 abstract class StoreTest extends PHPUnit_Framework_TestCase {
 
