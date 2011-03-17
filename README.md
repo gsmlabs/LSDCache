@@ -63,3 +63,4 @@ ToDo/Issues
 
 - how to handle consistently ttl=0 (eg. memcache caches it forever)
 - lock_ttl (=30) is hardcored in Cache_Cache
+- key namespaces/prefixes
