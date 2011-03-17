@@ -57,3 +57,9 @@ Possible improvements
 - Cache versioning may be implemented to improve value replacing.
 - Regeneration process may be moved outside of the request-response cycle
   (eg. in cronjob), so data is always served from cache.
+
+ToDo/Issues
+-----------
+
+- how to handle consistently ttl=0 (eg. memcache caches it forever)
+- lock_ttl (=30) is hardcored in Cache_Cache

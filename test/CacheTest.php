@@ -130,4 +130,12 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     return $value;
   }
 
+  public function testMultiGetsValue() {
+    $this->markTestIncomplete();
+  }
+
+  public function testMultiSetsValue() {
+    $this->markTestIncomplete();
+  }
+
 }

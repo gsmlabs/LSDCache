@@ -68,4 +68,16 @@ abstract class StoreTest extends PHPUnit_Framework_TestCase {
     $this->assertFalse($this->getStore()->get($key));
   }
 
+  public function testMultiGetsValue() {
+    $this->markTestIncomplete();
+  }
+
+  public function testMultiSetsValue() {
+    $this->markTestIncomplete();
+  }
+
+  public function testValuesExpire() {
+    $this->markTestIncomplete('It should be tested whether values really expire after specified ttl');
+  }
+
 }
