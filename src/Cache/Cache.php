@@ -17,7 +17,7 @@ class Cache_Cache {
 
   public function set($key, $value, $ttl = 0, $generation_time = NULL) {
     $vo = new Cache_Value($value, $ttl, $generation_time = NULL);
-    $result = $this->store->set($key, $vo, $vo->getExpirationTimestamp() + $vo->getGenerationTime());
+    $result = $this->store->set($key, $vo, $vo->getTtl() + $vo->getGenerationTime());
     $this->unlock($key);
     return $result;
   }
