@@ -3,12 +3,14 @@ class Cache_Cache {
 
   private $store;
 
+  private $active_locks = array();
   private $default_lock_ttl = 30;
   private $lock_key_suffix = '.lock';
   private $deadlock_handler;
   
   public function  __construct(Cache_Store $store) {
     $this->store = $store;
+    register_shutdown_function(array($this, 'unlockActiveLocks'));
   }
 
   public function getStore() {
@@ -57,15 +59,28 @@ class Cache_Cache {
   /**
    * @return bool
    */
-  private function lock($key, $lock_ttl = NULL) {
-    return $this->store->add($this->lockKey($key), true, ($lock_ttl ? $lock_ttl : $this->default_lock_ttl));
+  private function lock($key, $lock_ttl = NULL, $mark_as_active = true) {
+    $locked = $this->store->add($this->lockKey($key), true, ($lock_ttl ? $lock_ttl : $this->default_lock_ttl));
+    if ($locked && $mark_as_active) {
+      $this->active_locks[$key] = true;
+    }
+    return $locked;
   }
 
   /**
    * @return bool
    */
-  private function unlock($key) {    
+  private function unlock($key) {
+    if (isset($this->active_locks[$key])) {
+      unset($this->active_locks[$key]);
+    }
     return $this->store->delete($this->lockKey($key));
+  }
+
+  public function unlockActiveLocks() {
+    foreach ($this->active_locks as $key => $v) {
+      $this->unlock($key);
+    }
   }
 
   public function lockKey($key) {
