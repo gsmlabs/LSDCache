@@ -54,6 +54,8 @@ phpunit --testdox test/
 Possible improvements
 ---------------------
 
+- setMulti()/getMulti()
+- Tests whether value really expires.
 - Cache versioning may be implemented to improve value replacing.
 - Regeneration process may be moved outside of the request-response cycle
   (eg. in cronjob), so data is always served from cache.
