@@ -3,7 +3,7 @@ class Cache_Cache {
 
   private $store;
 
-  private $lock_ttl = 30;
+  private $default_lock_ttl = 30;
   private $lock_key_suffix = '.lock';
   private $deadlock_handler;
   
@@ -28,7 +28,7 @@ class Cache_Cache {
       return $vo->getValue();
     }
 
-    $locked = $this->lock($key);
+    $locked = $this->lock($key, ($this->isCacheValue($vo) ? $vo->getGenerationTime() : $this->default_lock_ttl));
 
     if (!$locked) {
       if ($this->isCacheValue($vo)) {
@@ -50,11 +50,15 @@ class Cache_Cache {
     }
   }
 
+  public function setDefaultTtl($ttl) {
+    $this->default_lock_ttl = (int)$ttl;
+  }
+
   /**
    * @return bool
    */
-  private function lock($key) {
-    return $this->store->add($this->lockKey($key), true, $this->lock_ttl);
+  private function lock($key, $lock_ttl = NULL) {
+    return $this->store->add($this->lockKey($key), true, ($lock_ttl ? $lock_ttl : $this->default_lock_ttl));
   }
 
   /**
