@@ -1,5 +1,4 @@
 <?php
-require_once 'PHPUnit/Framework.php';
 require_once dirname(__FILE__).'/../src/Cache/Cache.php';
 require_once dirname(__FILE__).'/../src/Cache/Value.php';
 
