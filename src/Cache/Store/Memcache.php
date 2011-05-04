@@ -22,7 +22,7 @@ class Cache_Store_Memcache implements Cache_Store {
   public function delete($key) {
     // workaround for memcache "delete" various issue
     // for example see comments for http://php.net/manual/en/memcache.delete.php
-    return $this->memcache->set($key, false, 0, 1);
+    return $this->memcache->set($key, false, 0, -1);
   }
 
 }
