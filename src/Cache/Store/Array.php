@@ -19,6 +19,9 @@ class Cache_Store_Array implements Cache_Store {
 
   public function set($key, $value, $ttl = 0) {
     $this->values[$key] = $value;
+    if ($ttl == 0) {
+      $ttl = 999999999; // stored forever
+    }
     $this->expiration_timestamps[$key] = time() + $ttl;
     return true;
   }
