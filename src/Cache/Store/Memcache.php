@@ -15,6 +15,18 @@ class Cache_Store_Memcache implements Cache_Store {
     return $this->memcache->set($key, $value, 0, $ttl);
   }
 
+  public function getMulti($keys) {
+    return $this->memcache->get($keys);
+  }
+
+  public function setMulti($values, $ttl = 0) {
+    $result = true;
+    foreach($values as $key => $value) {
+      $result &= $this->set($key, $value, $ttl);
+    }
+    return (bool)$result;
+  }
+
   public function add($key, $value, $ttl = 0) {
     return $this->memcache->add($key, $value, 0, $ttl);
   }

@@ -16,6 +16,19 @@ interface Cache_Store {
   public function set($key, $value, $ttl = 0);
 
   /**
+   * @param array $keys
+   * @return array Found key-value pairs
+   */
+  public function getMulti($keys);
+
+  /**
+   * @param array $values
+   * @param int $ttl
+   * @return bool
+   */
+  public function setMulti($values, $ttl = 0);
+
+  /**
    * @param string $key
    * @param mixed $value
    * @param int $ttl

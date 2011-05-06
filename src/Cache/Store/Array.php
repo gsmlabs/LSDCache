@@ -26,6 +26,14 @@ class Cache_Store_Array implements Cache_Store {
     return true;
   }
 
+  public function getMulti($keys) {
+    throw new Exception('Not yet implemented');
+  }
+
+  public function setMulti($values, $ttl = 0) {
+    throw new Exception('Not yet implemented');
+  }
+
   public function add($key, $value, $ttl = 0) {
     if (!isset($this->values[$key])) {
       return $this->set($key, $value, $ttl);

@@ -20,5 +20,8 @@ class StoreApcTest extends StoreTest {
     $this->markTestIncomplete('APC seems not to set value immediately, so it cannot be accessed right after setting');
   }
 
+  public function testSetMultiAndGetMultiValues() {
+    $this->markTestIncomplete('Functionality not yet implemented');
+  }
   
 }
