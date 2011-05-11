@@ -44,6 +44,45 @@ class Cache_Cache {
     return false;
   }
 
+  public function setMulti($values, $ttl = 0, $generation_time = NULL) {
+    $data = array();
+    foreach($values as $key => $value) {
+      $vo = new Cache_Value($value, $ttl, $generation_time);
+      $data[$key] = $vo;
+      $this->unlock($key);
+    }
+     $last_index = count($data) - 1;
+     $ttl = $values[$last_index]->getTtl() + $values[$last_index]->getGenerationTime();
+     return $this->store->setMulti($values, $ttl);
+
+    // $vo = new Cache_Value($value, $ttl, $generation_time);
+    // $result = $this->store->set($key, $vo, $vo->getTtl() + $vo->getGenerationTime());
+    // $this->unlock($key);
+    // return $result;
+  }
+
+  public function getMulti($keys) {
+    return $this->store->getMulti($keys);
+
+    // $vo = $this->store->get($key);
+    // if ($this->isCacheValue($vo) && (!$vo->isExpired())) {
+    //   return $vo->getValue();
+    // }
+    //
+    // $locked = $this->lock($key, ($this->isCacheValue($vo) ? $vo->getGenerationTime() : $this->default_lock_ttl));
+    //
+    // if (!$locked) {
+    //   if ($this->isCacheValue($vo)) {
+    //     return $vo->getValue();
+    //   }
+    //   else {
+    //     return $this->getDeadlockHandler()->handle($this, $key, $vo);
+    //   }
+    // }
+    //
+    // return false;
+  }
+
   public function getOrSet($key, $callback, $ttl = 0) {
     $result = $this->get($key);
     if ($result === false) {
