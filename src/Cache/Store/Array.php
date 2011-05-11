@@ -27,11 +27,34 @@ class Cache_Store_Array implements Cache_Store {
   }
 
   public function getMulti($keys) {
-    throw new Exception('Not yet implemented');
+    foreach($keys as $key) {
+      // If key has no expiration set, skip this step
+      if (!isset($this->values[$key]) || !isset($this->expiration_timestamps[$key])) {
+        continue;
+      }
+      // Or unset if data is no longer valid
+      if (time() > $this->expiration_timestamps[$key]) {
+        unset($this->values[$key]);
+      }
+    }
+    // Transform $keys to $key => false associative array (for comparision purposes)
+    $data_to_fetch = array_fill_keys(array_values($keys), false);
+    // Compare arrays and get all existing data from cache
+    $fetched_data = array_intersect_key($this->values, $data_to_fetch);
+
+    return $fetched_data;
   }
 
   public function setMulti($values, $ttl = 0) {
-    throw new Exception('Not yet implemented');
+
+     $this->values = array_merge($this->values, $values);
+     if ($ttl == 0) {
+       $ttl = 999999999; // stored forever
+     }
+     foreach($values as $key => $value) {
+       $this->expiration_timestamps[$key] = time() + $ttl;
+     }
+     return true;
   }
 
   public function add($key, $value, $ttl = 0) {

@@ -7,8 +7,4 @@ class StoreArrayTest extends StoreTest {
     $this->setStore(new Cache_Store_Array());
   }
 
-  public function testSetMultiAndGetMultiValues() {
-    $this->markTestIncomplete('Functionality not yet implemented');
-  }
-
 }

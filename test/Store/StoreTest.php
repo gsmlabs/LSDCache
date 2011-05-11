@@ -40,7 +40,7 @@ abstract class StoreTest extends PHPUnit_Framework_TestCase {
     $this->getStore()->setMulti($key_value);
 
     $this->assertEquals(array($key => $value), $this->getStore()->getMulti( array($key) ));
-    // $this->assertEquals(array(), $this->getStore()->getMulti( array($key_not_in_cache) ));
+    $this->assertEquals(array(), $this->getStore()->getMulti( array($key_not_in_cache) ));
 
     // TODO: remember that sometimes key's whitespace is being converted it into underscores
     // ie. array('gornik zabrze' => 'zabrze') results in ('gornik_zabrze' => 'zabrze')
