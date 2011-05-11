@@ -10,7 +10,7 @@ class Cache_Store_Apc implements Cache_Store {
   }
 
   public function getMulti($keys) {
-    throw new Exception('Not yet implemented');
+    // throw new Exception('Not yet implemented');
 
     $result = apc_fetch($keys);
     return empty($result) ? array() : $result;
