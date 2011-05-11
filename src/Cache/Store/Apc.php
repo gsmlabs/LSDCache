@@ -10,14 +10,19 @@ class Cache_Store_Apc implements Cache_Store {
   }
 
   public function getMulti($keys) {
-    // throw new Exception('Not yet implemented');
-
     $result = apc_fetch($keys);
     return empty($result) ? array() : $result;
   }
 
   public function setMulti($values, $ttl = 0) {
-    return apc_store($values, null, $ttl);
+    throw new Exception('Not yet implemented');
+    // when setMulti used, apc returns ($key1 => -1, $key2 => -1) array
+
+    // $result = apc_store($values, null, $ttl);
+    // foreach ($result as $key => $value) {
+    //   if ($value < 0) unset($result[$key]);
+    // }
+    // return empty($result);
   }
 
   public function add($key, $value, $ttl = 0) {
