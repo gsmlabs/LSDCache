@@ -29,10 +29,21 @@ class Cache_Store_Memcache implements Cache_Store {
   }
 
   public function getMulti($keys) {
-    foreach ($keys as &$key) {
+    $hashed_keys = $keys;
+    foreach ($hashed_keys as &$key) {
       $key = $this->prepareKey($key);
     }
-    return $this->memcache->get($keys);
+    
+    $data = $this->memcache->get($hashed_keys);
+    
+    $result = array();
+    foreach ($keys as $key) {
+      $hash = $this->prepareKey($key);
+      if (isset($data[$hash])) {
+        $result[$key] = $data[$hash];
+      }
+    }
+    return $result;
   }
 
   public function setMulti($values, $ttl = 0) {
