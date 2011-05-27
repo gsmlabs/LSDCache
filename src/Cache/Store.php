@@ -17,7 +17,7 @@ interface Cache_Store {
 
   /**
    * @param array $keys
-   * @return array Found key-value pairs
+   * @return array Found key-value pairs as an assoc array.
    */
   public function getMulti($keys);
 
