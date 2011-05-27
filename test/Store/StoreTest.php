@@ -22,6 +22,23 @@ abstract class StoreTest extends PHPUnit_Framework_TestCase {
   public function setStore(Cache_Store $store) {
     $this->store = $store;
   }
+  
+  /**
+   * See ticket #3702 for details.
+   */
+  public function testHandlesReallyLongKey() {
+    $key = str_repeat('123456789x', 50);
+    $value = 'everton';
+
+    $store = new Cache_Store_Array();
+    $cache = new Cache_Cache($store);
+
+    $store->set($key, new Cache_Value($value, 3600));
+    $store->set($key.'_is_too_long', new Cache_Value('_try_overwrite', 3600));
+
+    $result = $cache->get($key);
+    $this->assertEquals($value, $result);
+  }
 
   public function testSetAndGetValue() {
     $key = 'zabrze';
