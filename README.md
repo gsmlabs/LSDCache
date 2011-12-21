@@ -34,6 +34,7 @@ It can be done via custom Cache_DeadlockHandler.
 Usage
 -----
 
+``` js
 $cache = new Cache_Cache(new Cache_Store_Apc());
 if ($cache->get($key)) {
   // regenerate value
@@ -42,21 +43,23 @@ if ($cache->get($key)) {
 
 $cache = new Cache_Cache(new Cache_Store_Apc());
 $cache->getOrSet($key, callback, $ttl);
+```
 
 
 Tests
 -----
 
+```
 phpunit --colors test/
 phpunit --testdox test/
+```
 
 
 Possible improvements
 ---------------------
 
-- setMulti()/getMulti()
+- Use @depends annotation to mark tests dependencies.
 - Tests whether value really expires.
 - Cache versioning may be implemented to improve value replacing.
 - Regeneration process may be moved outside of the request-response cycle
   (eg. in cronjob), so data is always served from cache.
-- Cache keys auto-namespaces/prefixes.
