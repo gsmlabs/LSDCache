@@ -1,22 +1,20 @@
 <?php
-require_once dirname(__FILE__).'/../src/Cache/Cache.php';
-require_once dirname(__FILE__).'/../src/Cache/Value.php';
-require_once dirname(__FILE__).'/../src/Cache/Store.php';
-require_once dirname(__FILE__).'/../src/Cache/Store/Array.php';
-require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler.php';
-require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler/Exception.php';
-require_once dirname(__FILE__).'/../src/Cache/DeadlockHandler/False.php';
+namespace LSDCache\Tests;
+use LSDCache\Cache;
+use LSDCache\Value;
+use LSDCache\DeadlockHandler;
+use LSDCache\Store;
 
-class CacheTest extends PHPUnit_Framework_TestCase {
+class CacheTest extends \PHPUnit_Framework_TestCase {
 
   public function testGetsValue() {
     $key = 'liverpool';
     $value = 'everton';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
-    $store->set($key, new Cache_Value($value, 3600));
+    $store->set($key, new Value($value, 3600));
 
     $result = $cache->get($key);
     $this->assertEquals($value, $result);
@@ -26,22 +24,22 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $key = 'barcelona';
     $value = 'fc barcelona';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
     
     $result = $cache->set($key, $value, 3600);
     $this->assertTrue($result);
 
     $vo = $store->get($key);
-    $this->assertTrue($vo instanceof Cache_Value, 'Cache should return Cache_Value');
+    $this->assertTrue($vo instanceof Value, 'Cache should return Value');
     $this->assertEquals($value, $vo->getValue());
   }
 
   public function testReturnsFalseWhenGettingNotExistingValue() {
     $key = 'monaco';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $result = $cache->get($key);
     $this->assertFalse($result);
@@ -51,8 +49,8 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $key = 'dortmund';
     $value = 'borussia';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $cache->get($key);
     $this->assertTrue($store->get($cache->lockKey($key)));
@@ -62,8 +60,8 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $key = 'milan';
     $value = 'internazionale';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $store->set($cache->lockKey($key), true);
 
@@ -75,8 +73,8 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $key = 'madrid';
     $value = 'real';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $cache->set($key, $value, -1, 10); // expired value    
     $store->set($cache->lockKey($key), true); // other process sets a lock
@@ -87,8 +85,8 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     $key = 'krakow';
     $value = 'wisla';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $store->set($cache->lockKey($key), true); // other process sets a lock
     
@@ -96,20 +94,20 @@ class CacheTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testCanSetCustomDeadlockHandler() {
-    $cache = new Cache_Cache(new Cache_Store_Array());
+    $cache = new Cache(new Store\PhpArray());
 
-    $deadlock_handler = new Cache_DeadlockHandler_False();
+    $deadlock_handler = new DeadlockHandler\FalseValue();
     $cache->setDeadlockHandler($deadlock_handler);
     $this->assertSame($deadlock_handler, $cache->getDeadlockHandler());
 
-    $deadlock_handler = new Cache_DeadlockHandler_Exception();
+    $deadlock_handler = new DeadlockHandler\Exception();
     $cache->setDeadlockHandler($deadlock_handler);
     $this->assertSame($deadlock_handler, $cache->getDeadlockHandler());
   }
 
   public function testCanGetStore() {
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $this->assertSame($store, $cache->getStore());
   }
@@ -117,8 +115,8 @@ class CacheTest extends PHPUnit_Framework_TestCase {
   public function testCanGetAndSetViaCallback() {
     $key = $value = 'lisboa';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
     $cache->getOrSet($key, array($this, 'getOrSetCallback'), 3600);
     $this->assertEquals($value, $cache->get($key));

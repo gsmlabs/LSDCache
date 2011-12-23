@@ -1,9 +1,11 @@
 <?php
-class Cache_Store_Memcache implements Cache_Store {
+namespace LSDCache\Store;
+
+class Memcache implements StoreInterface {
 
   private $memcache;
 
-  public function __construct(Memcache $memcache) {
+  public function __construct(\Memcache $memcache) {
     $this->memcache = $memcache;
   }
 

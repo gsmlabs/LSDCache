@@ -1,5 +1,7 @@
 <?php
-interface Cache_Store {
+namespace LSDCache\Store;
+
+interface StoreInterface {
 
   /**
    * @param string $key

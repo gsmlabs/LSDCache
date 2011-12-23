@@ -1,6 +1,8 @@
 <?php
+namespace LSDCache\DeadlockHandler;
+use LSDCache\Cache;
 
-class Cache_DeadlockHandler_Wait implements Cache_DeadlockHandler {
+class Wait implements DeadlockHandlerInterface {
   private $waiting_time, $max_tries;
   private $counters = array();
   
@@ -13,7 +15,7 @@ class Cache_DeadlockHandler_Wait implements Cache_DeadlockHandler {
     $this->max_tries = $max_tries;
   }
 
-  public function handle(Cache_Cache $cache, $key) {
+  public function handle(Cache $cache, $key) {
     sleep($this->waiting_time);
     if (!isset($this->counters[$key])) {
       $this->counters[$key] = 0;

@@ -1,14 +1,10 @@
 <?php
-require_once dirname(__FILE__).'/../../src/Cache/Cache.php';
-require_once dirname(__FILE__).'/../../src/Cache/Value.php';
-require_once dirname(__FILE__).'/../../src/Cache/Store.php';
-require_once dirname(__FILE__).'/../../src/Cache/Store/Apc.php';
-require_once dirname(__FILE__).'/../../src/Cache/Store/Array.php';
-require_once dirname(__FILE__).'/../../src/Cache/Store/Memcache.php';
-require_once dirname(__FILE__).'/../../src/Cache/DeadlockHandler.php';
-require_once dirname(__FILE__).'/../../src/Cache/DeadlockHandler/Exception.php';
+namespace LSDCache\Tests;
+use LSDCache\Cache;
+use LSDCache\Value;
+use LSDCache\Store;
 
-abstract class StoreTest extends PHPUnit_Framework_TestCase {
+abstract class StoreTest extends \PHPUnit_Framework_TestCase {
 
   private $store;
 
@@ -19,7 +15,7 @@ abstract class StoreTest extends PHPUnit_Framework_TestCase {
     return $this->store;
   }
 
-  public function setStore(Cache_Store $store) {
+  public function setStore(Store\StoreInterface $store) {
     $this->store = $store;
   }
   
@@ -30,11 +26,11 @@ abstract class StoreTest extends PHPUnit_Framework_TestCase {
     $key = str_repeat('123456789x', 50);
     $value = 'everton';
 
-    $store = new Cache_Store_Array();
-    $cache = new Cache_Cache($store);
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
 
-    $store->set($key, new Cache_Value($value, 3600));
-    $store->set($key.'_is_too_long', new Cache_Value('_try_overwrite', 3600));
+    $store->set($key, new Value($value, 3600));
+    $store->set($key.'_is_too_long', new Value('_try_overwrite', 3600));
 
     $result = $cache->get($key);
     $this->assertEquals($value, $result);

@@ -51,7 +51,7 @@ Tests
 -----
 
 ```
-phpunit --colors test/
+phpunit test/
 phpunit --testdox test/
 ```
 

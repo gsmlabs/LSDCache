@@ -1,5 +1,7 @@
 <?php
-class Cache_Value {
+namespace LSDCache;
+
+class Value {
 
   private $value;
   private $ttl;

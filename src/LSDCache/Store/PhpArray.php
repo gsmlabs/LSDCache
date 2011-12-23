@@ -1,5 +1,7 @@
 <?php
-class Cache_Store_Array implements Cache_Store {
+namespace LSDCache\Store;
+
+class PhpArray implements StoreInterface {
 
   private $values = array();
   private $expiration_timestamps = array();

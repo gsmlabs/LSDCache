@@ -1,5 +1,7 @@
 <?php
-class Cache_Store_Apc implements Cache_Store {
+namespace LSDCache\Store;
+
+class Apc implements StoreInterface {
 
   public function get($key) {
     return apc_fetch($key);

@@ -1,5 +1,8 @@
 <?php
-class Cache_Cache {
+namespace LSDCache;
+use LSDCache\Value;
+
+class Cache {
 
   private $store;
 
@@ -8,7 +11,7 @@ class Cache_Cache {
   private $lock_key_suffix = '.lock';
   private $deadlock_handler;
   
-  public function  __construct(Cache_Store $store) {
+  public function  __construct(Store\StoreInterface $store) {
     $this->store = $store;
     register_shutdown_function(array($this, 'unlockActiveLocks'));
   }
@@ -18,7 +21,7 @@ class Cache_Cache {
   }
 
   public function set($key, $value, $ttl = 0, $generation_time = NULL) {
-    $vo = new Cache_Value($value, $ttl, $generation_time);
+    $vo = new Value($value, $ttl, $generation_time);
     $result = $this->store->set($key, $vo, $vo->getTtl() + $vo->getGenerationTime());
     $this->unlock($key);
     return $result;
@@ -91,18 +94,18 @@ class Cache_Cache {
    * @return bool
    */
   private function isCacheValue($vo) {
-    return ($vo !== false && $vo instanceof Cache_Value);
+    return ($vo !== false && $vo instanceof \LSDCache\Value);
   }
 
   public function getDeadlockHandler() {
     if (!$this->deadlock_handler) {
-      $this->deadlock_handler = new Cache_DeadlockHandler_False();
+      $this->deadlock_handler = new DeadlockHandler\FalseValue();
     }
     return $this->deadlock_handler;
   }
 
-  public function setDeadlockHandler(Cache_DeadlockHandler $deadlock_handler) {
+  public function setDeadlockHandler(DeadlockHandler\DeadlockHandlerInterface $deadlock_handler) {
     $this->deadlock_handler = $deadlock_handler;
   }
-  
+
 }
