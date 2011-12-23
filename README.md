@@ -36,13 +36,16 @@ It can be done via custom Cache_DeadlockHandler.
 -----
 
 ``` php
-$cache = new Cache_Cache(new Cache_Store_Apc());
+use LSDCache\Cache;
+use LSDCache\Store;
+
+$cache = new Cache(new Store\Apc());
 if ($cache->get($key)) {
   // regenerate value
   $cache->set($key, $value, $ttl);
 }
 
-$cache = new Cache_Cache(new Cache_Store_Apc());
+$cache = new Cache(new Store\Apc());
 $cache->getOrSet($key, callback, $ttl);
 ```
 
