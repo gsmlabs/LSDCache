@@ -55,6 +55,10 @@ class Cache {
     }
   }
 
+  public function delete($key) {
+    return $this->getStore()->delete($key);
+  }
+
   public function setDefaultTtl($ttl) {
     $this->default_lock_ttl = (int)$ttl;
   }
