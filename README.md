@@ -33,7 +33,8 @@ times in the following scenario:
 
 It can be done via custom Cache_DeadlockHandler.
 
------
+Examples
+--------
 
 ``` php
 use LSDCache\Cache;
@@ -46,7 +47,9 @@ if ($cache->get($key)) {
 }
 
 $cache = new Cache(new Store\Apc());
-$cache->getOrSet($key, callback, $ttl);
+$cache->getOrSet($key, function() {
+  // generate value
+}, $ttl);
 ```
 
 
