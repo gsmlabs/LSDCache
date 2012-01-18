@@ -3,20 +3,20 @@ namespace LSDCache\DeadlockHandler;
 use LSDCache\Cache;
 
 class Wait implements DeadlockHandlerInterface {
-  private $waiting_time, $max_tries;
+  private $waiting_seconds, $max_tries;
   private $counters = array();
   
   /**
-   * @param type $waiting_time Time (seconds) to wait before trying to get value again.
+   * @param type $waiting_seconds Time (seconds) to wait before trying to get value again.
    * @param type $max_tries Max number of tries.
    */
-  public function __construct($waiting_time, $max_tries) {
-    $this->waiting_time = $waiting_time;
+  public function __construct($waiting_seconds, $max_tries) {
+    $this->waiting_seconds = $waiting_seconds;
     $this->max_tries = $max_tries;
   }
 
   public function handle(Cache $cache, $key) {
-    sleep($this->waiting_time);
+    usleep($this->waiting_seconds * 1000000);
     if (!isset($this->counters[$key])) {
       $this->counters[$key] = 0;
     }
@@ -29,5 +29,4 @@ class Wait implements DeadlockHandlerInterface {
 
     return $cache->get($key);
   }
-
 }

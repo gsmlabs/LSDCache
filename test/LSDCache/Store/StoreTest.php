@@ -1,5 +1,7 @@
 <?php
 namespace LSDCache\Tests;
+use LSDCache\DeadlockHandler\Wait;
+
 use LSDCache\Cache;
 use LSDCache\Value;
 use LSDCache\Store;
@@ -107,6 +109,33 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
 
   public function testValuesExpire() {
     $this->markTestIncomplete('It should be tested whether values really expire after specified ttl');
+  }
+  /**
+  * @dataProvider provider_testWaitHandle
+  */
+  public function testWaitHanle($time) {
+    $wait = new Wait($time, 0);
+    $key = 'time';
+    $t1 = microtime(true);
+    $cache = new Cache($this->getStore());
+    $wait->handle($cache, $key);
+    $t2 = microtime(true);
+    //Because of problem with comparing floats
+    $diff = (int)((float)($t2-$t1) * (float)1000);
+    $this->assertEquals($diff, (int)($time*1000));
+  }
+  
+  public function provider_testWaitHandle()
+  {
+    return array(
+    array(1),
+    array(1.5),
+    array(0.5),
+    array(2.33),
+    array(0.111),
+    array(5),
+    array(0)
+    );
   }
 
 }
