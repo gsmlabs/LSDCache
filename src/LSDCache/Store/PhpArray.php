@@ -73,5 +73,15 @@ class PhpArray implements StoreInterface {
     }
     return false;
   }
-  
+
+  public function inc($key, $step=1) {
+    $orgval = $this->get($key);
+    if($orgval === false) {
+      return false;
+    }
+    $newval = (int)$orgval + (int)$step;
+    $this->set($key, $newval);
+
+    return $newval;
+  }
 }

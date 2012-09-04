@@ -44,4 +44,11 @@ interface StoreInterface {
    */
   public function delete($key);
 
+  /**
+   * @param string $key
+   * @param int $step
+   * @return int New incremented value or FALSE if not exists
+   */
+  public function inc($key,$step=1);
+
 }
