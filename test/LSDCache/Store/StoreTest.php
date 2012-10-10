@@ -110,9 +110,12 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
   public function testValuesExpire() {
     $this->markTestIncomplete('It should be tested whether values really expire after specified ttl');
   }
-  // /**
-  // * @dataProvider provider_testWaitHandle
-  // */
+
+
+  // disabled as it returns various results between tests
+  /**
+  * @dataProvider provider_testWaitHandle
+  */
   // public function testWaitHanle($time) {
   //   $wait = new Wait($time, 0);
   //   $key = 'time';
@@ -125,17 +128,17 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
   //   $this->assertEquals($diff, (int)($time*1000));
   // }
   
-  public function provider_testWaitHandle()
-  {
-    return array(
-    array(1),
-    array(1.5),
-    array(0.5),
-    array(2.33),
-    array(0.111),
-    array(5),
-    array(0)
-    );
-  }
+  // public function provider_testWaitHandle()
+  // {
+  //   return array(
+  //   array(1),
+  //   array(1.5),
+  //   array(0.5),
+  //   array(2.33),
+  //   array(0.111),
+  //   array(5),
+  //   array(0)
+  //   );
+  // }
 
 }
