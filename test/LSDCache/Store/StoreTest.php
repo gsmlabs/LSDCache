@@ -8,7 +8,7 @@ use LSDCache\Store;
 
 abstract class StoreTest extends \PHPUnit_Framework_TestCase {
 
-  private $store;
+  protected $store;
 
   /**
    * @return Cache_Store
