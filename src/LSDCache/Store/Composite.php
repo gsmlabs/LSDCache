@@ -1,6 +1,8 @@
 <?php
 namespace LSDCache\Store;
 
+use LSDCache\Value;
+
 class Composite implements StoreInterface {
 
   protected $stores = array();
@@ -22,7 +24,12 @@ class Composite implements StoreInterface {
       $value = $store->get($key);
       if ($value) {
         foreach ($previous_stores as $store) {
-          $store->set($key, $value->getValue(), $value->getExpirationTimestamp() - time());
+          if ($value instanceof Value) {
+            $store->set($key, $value->getValue(), $value->getExpirationTimestamp() - time());
+          }
+          else {
+            $store->set($key, $value);
+          }
         }
         return $value;
       }
