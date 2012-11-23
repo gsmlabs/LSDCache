@@ -16,11 +16,17 @@ class Composite implements StoreInterface {
   }
 
   public function get($key) {
+    $previous_stores = array();
+
     foreach ($this->stores as $store) {
       $value = $store->get($key);
       if ($value) {
+        foreach ($previous_stores as $store) {
+          $store->set($key, $value->getValue(), $value->getExpirationTimestamp() - time());
+        }
         return $value;
       }
+      $previous_stores[] = $store;
     }
 
     return false;
