@@ -35,4 +35,8 @@ class Apc implements StoreInterface {
   public function inc($key, $step=1) {
     return apc_inc($key, $step);
   }
+
+  public function isSupported() {
+    return extension_loaded('apc');
+  }
 }

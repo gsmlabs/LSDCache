@@ -73,4 +73,8 @@ class Memcache implements StoreInterface {
     $key = $this->prepareKey($key);
     return $this->memcache->increment($key, $step);
   }
+
+  public function isSupported() {
+    return extension_loaded('memcache');
+  }
 }

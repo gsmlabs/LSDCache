@@ -51,4 +51,8 @@ interface StoreInterface {
    */
   public function inc($key,$step=1);
 
+  /**
+   * @return bool
+   */
+  public function isSupported();
 }

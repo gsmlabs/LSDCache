@@ -3,6 +3,10 @@ namespace LSDCache\Store;
 
 use LSDCache\Value;
 
+/**
+ * Aggregates multiple stores (call methods for all of the stores).
+ * Only supported stores are called.
+ */
 class Composite implements StoreInterface {
 
   protected $stores = array();
@@ -13,8 +17,17 @@ class Composite implements StoreInterface {
     }
   }
 
+  /**
+   * Add store (if supported).
+   *
+   * @return bool
+   */
   public function addStore(StoreInterface $store) {
-    $this->stores[] = $store;
+    if ($store->isSupported()) {
+      $this->stores[] = $store;
+      return true;
+    }
+    return false;
   }
 
   public function get($key) {

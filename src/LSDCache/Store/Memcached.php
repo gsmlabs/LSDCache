@@ -65,4 +65,7 @@ class Memcached implements StoreInterface {
     return $this->memcached->increment($this->prepareKey($key), $step);
   }
 
+  public function isSupported() {
+    return extension_loaded('memcached');
+  }
 }

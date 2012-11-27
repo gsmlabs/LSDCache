@@ -84,4 +84,8 @@ class PhpArray implements StoreInterface {
 
     return $newval;
   }
+
+  public function isSupported() {
+    return true;
+  }
 }
