@@ -3,5 +3,5 @@
     "type": "library",
     "autoload": {
         "psr-0": { "LSDCache\\": "src/" }
-    },
+    }
 }
