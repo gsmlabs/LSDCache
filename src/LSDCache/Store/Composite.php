@@ -103,9 +103,13 @@ class Composite implements StoreInterface {
   }
 
   public function inc($key, $step = 1) {
+    $return_values = array();
+
     foreach ($this->stores as $store) {
-      $store->inc($key, $step);
+      $return_values[] = $store->inc($key, $step);
     }
+
+    return max($return_values);
   }
 
   public function isSupported() {
