@@ -43,7 +43,7 @@ class XCache implements StoreInterface {
     return xcache_unset($key);
   }
 
-  public function inc($key, $step=1) {
+  public function inc($key, $step = 1) {
     return xcache_inc($key, $step);
   }
 

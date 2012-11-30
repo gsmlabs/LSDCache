@@ -32,7 +32,7 @@ class Apc implements StoreInterface {
     return apc_delete($key);
   }
 
-  public function inc($key, $step=1) {
+  public function inc($key, $step = 1) {
     return apc_inc($key, $step);
   }
 
