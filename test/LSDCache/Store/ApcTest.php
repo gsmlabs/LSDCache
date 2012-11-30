@@ -5,7 +5,6 @@ use LSDCache\Store;
 class StoreApcTest extends StoreTest {
 
   public function setUp() {
-    apc_clear_cache('user');
     $this->setStore(new Store\Apc());
   }
   

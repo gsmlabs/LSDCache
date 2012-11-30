@@ -18,6 +18,10 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function setStore(Store\StoreInterface $store) {
+    if (!$store->isSupported()) {
+      $this->markTestSkipped(sprintf('%s not supported', get_class($store)));
+    }
+
     $this->store = $store;
   }
   
@@ -52,18 +56,14 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
     $key_not_in_cache = 'poznan';
 
     $key_value = array($key => $value, $value => $key);
-    $result    = $this->getStore()->setMulti($key_value);
+    $result = $this->getStore()->setMulti($key_value);
 
     $this->assertEquals(true, $result);
-    $this->assertEquals(array($key => $value), $this->getStore()->getMulti( array($key) ));
-    $this->assertEquals(array(), $this->getStore()->getMulti( array($key_not_in_cache) ));
-
-    // NOTICE: remember that sometimes key's whitespace is being converted into underscores
-    // ie. array('gornik zabrze' => 'zabrze') results in ('gornik_zabrze' => 'zabrze')
-
+    $this->assertEquals(array($key => $value), $this->getStore()->getMulti(array($key)));
+    $this->assertEquals(array(), $this->getStore()->getMulti(array($key_not_in_cache)));
   }
 
-  public function testreturnsFalseOnGettingNonExistingValue() {
+  public function testReturnsFalseOnGettingNonExistingValue() {
     $key = 'gliwice';
 
     $this->assertFalse($this->getStore()->get($key));
@@ -97,6 +97,22 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
     $this->getStore()->delete($key, $value);
 
     $this->assertFalse($this->getStore()->get($key));
+  }
+
+  public function testIncValue() {
+    $key = 'gliwice';
+    $value = 'piast gliwice';
+
+    $value = $this->getStore()->inc($key);
+    $this->assertFalse($value);
+
+    $this->getStore()->set($key, 1);
+
+    $value = $this->getStore()->inc($key);
+    $this->assertEquals(2, $value);
+
+    $value = $this->getStore()->get($key);
+    $this->assertEquals(2, $value);
   }
 
   public function testMultiGetsValue() {

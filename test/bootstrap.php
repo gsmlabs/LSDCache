@@ -4,6 +4,7 @@ require_once __DIR__.'/../src/LSDCache/Value.php';
 require_once __DIR__.'/../src/LSDCache/Store/StoreInterface.php';
 require_once __DIR__.'/../src/LSDCache/Store/PhpArray.php';
 require_once __DIR__.'/../src/LSDCache/Store/Apc.php';
+require_once __DIR__.'/../src/LSDCache/Store/XCache.php';
 require_once __DIR__.'/../src/LSDCache/Store/Memcache.php';
 require_once __DIR__.'/../src/LSDCache/Store/Memcached.php';
 require_once __DIR__.'/../src/LSDCache/Store/Composite.php';
