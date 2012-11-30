@@ -31,27 +31,29 @@ class Memcache implements StoreInterface {
   }
 
   public function getMulti($keys) {
-    $hashed_keys = $keys;
-    foreach ($hashed_keys as &$key) {
-      $key = $this->prepareKey($key);
-    }
-    
-    $data = $this->memcache->get($hashed_keys);
-    
-    $result = array();
+    $prepared_keys = array();
     foreach ($keys as $key) {
-      $hash = $this->prepareKey($key);
-      if (isset($data[$hash])) {
-        $result[$key] = $data[$hash];
+      $prepared_keys[] = $this->prepareKey($key);
+    }
+
+    $raw_result = $this->memcache->get($prepared_keys);
+
+    $result = array();
+
+    foreach ($keys as $key) {
+      $prepared_key = $this->prepareKey($key);
+
+      if (isset($raw_result[$prepared_key])) {
+        $result[$key] = $raw_result[$prepared_key];
       }
     }
+
     return $result;
   }
 
   public function setMulti($values, $ttl = 0) {
-    $result = true;
+    $result = 1;
     foreach($values as $key => $value) {
-      $key = $this->prepareKey($key);
       $result &= $this->set($key, $value, $ttl);
     }
     return (bool)$result;
