@@ -8,6 +8,7 @@ require_once __DIR__.'/../src/LSDCache/Store/XCache.php';
 require_once __DIR__.'/../src/LSDCache/Store/Memcache.php';
 require_once __DIR__.'/../src/LSDCache/Store/Memcached.php';
 require_once __DIR__.'/../src/LSDCache/Store/Composite.php';
+require_once __DIR__.'/../src/LSDCache/Store/FirstSupported.php';
 require_once __DIR__.'/../src/LSDCache/DeadlockHandler/DeadlockHandlerInterface.php';
 require_once __DIR__.'/../src/LSDCache/DeadlockHandler/Exception.php';
 require_once __DIR__.'/../src/LSDCache/DeadlockHandler/FalseValue.php';
