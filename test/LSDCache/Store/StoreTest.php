@@ -100,8 +100,7 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testIncValue() {
-    $key = 'gliwice';
-    $value = 'piast gliwice';
+    $key = 'bielsko';
 
     $value = $this->getStore()->inc($key);
     $this->assertFalse($value);

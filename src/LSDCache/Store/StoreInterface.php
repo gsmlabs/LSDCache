@@ -34,7 +34,7 @@ interface StoreInterface {
    * @param string $key
    * @param mixed $value
    * @param int $ttl
-   * @return bool
+   * @return bool Returns false if such key already exist.
    */
   public function add($key, $value, $ttl = 0);
 
