@@ -55,4 +55,9 @@ interface StoreInterface {
    * @return bool
    */
   public function isSupported();
+
+  /**
+   * @return bool
+   */
+  public function isStoreRunning();
 }

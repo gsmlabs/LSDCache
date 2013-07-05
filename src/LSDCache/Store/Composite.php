@@ -115,4 +115,9 @@ class Composite implements StoreInterface {
   public function isSupported() {
     return true;
   }
+
+  public function isStoreRunning() {
+    return true;
+  }
+
 }

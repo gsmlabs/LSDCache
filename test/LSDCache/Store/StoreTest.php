@@ -22,9 +22,13 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase {
       $this->markTestSkipped(sprintf('%s not supported', get_class($store)));
     }
 
+    if (!$store->isStoreRunning()) {
+      $this->markTestSkipped(sprintf('%s store engine is not running', get_class($store)));
+    }
+
     $this->store = $store;
   }
-  
+ 
   /**
    * See ticket #3702 for details.
    */

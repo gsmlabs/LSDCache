@@ -84,4 +84,13 @@ class Memcached implements StoreInterface {
     }
     return $ttl;
   }
+
+  public function isStoreRunning() {
+    foreach ($this->memcached->getStats() as $serverInfo) {
+      if (isset($serverInfo['pid']) && 0 < $serverInfo['pid']) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

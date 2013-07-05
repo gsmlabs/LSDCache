@@ -50,4 +50,8 @@ class XCache implements StoreInterface {
   public function isSupported() {
     return extension_loaded('xcache');
   }
+
+  public function isStoreRunning() {
+    return (\ini_get("xcache.cacher") && 0 < (int)\ini_get('xcache.var_size'));
+  }
 }

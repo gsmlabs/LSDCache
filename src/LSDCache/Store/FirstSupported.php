@@ -24,7 +24,7 @@ class FirstSupported implements StoreInterface {
       return false;
     }
 
-    if (!$store->isSupported()) {
+    if (!$store->isSupported() || !$store->isStoreRunning()) {
       return false;
     }
 
@@ -62,6 +62,10 @@ class FirstSupported implements StoreInterface {
   }
 
   public function isSupported() {
+    return true;
+  }
+
+  public function isStoreRunning() {
     return true;
   }
 }

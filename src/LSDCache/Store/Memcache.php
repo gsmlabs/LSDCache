@@ -98,4 +98,18 @@ class Memcache implements StoreInterface {
     }
     return $ttl;
   }
+
+  public function isStoreRunning() {
+    foreach ($this->memcache->getExtendedStats() as $serverKey => $serverInfo) {
+      $host = substr($serverKey, 0, (strpos($serverKey, ':')));
+      $port = substr($serverKey, (strpos($serverKey, ':') + 1));
+
+      $memcache = new \Memcache;
+      if ($memcache->connect($host, $port)) {
+        $memcache->close();
+        return true;
+      }
+    }
+    return false;
+  }
 }

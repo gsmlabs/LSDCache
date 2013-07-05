@@ -39,4 +39,15 @@ class Apc implements StoreInterface {
   public function isSupported() {
     return extension_loaded('apc');
   }
+
+  public function isStoreRunning() {
+    if (0 === (int)\ini_get('apc.shm_size')) {
+      return false;
+    }
+
+    if ('cli' === \php_sapi_name()) {
+      return (bool)\ini_get('apc.enable_cli');
+    }
+    return (bool)\ini_get('apc.enabled');
+  }
 }
