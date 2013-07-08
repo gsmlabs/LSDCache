@@ -5,6 +5,8 @@ class Memcached implements StoreInterface {
 
   private $memcached;
 
+  const MAX_TTL = 2592000;
+
   public function __construct(\Memcached $memcached) {
     $this->memcached = $memcached;
   }
@@ -67,5 +69,19 @@ class Memcached implements StoreInterface {
 
   public function isSupported() {
     return extension_loaded('memcached');
+  }
+
+  /**
+   * When TTL exceeds 2592000 (30 days) then ttl must be set in Unix timestamp
+   * 
+   * See ticket #4022 for details.
+   * @param string $key
+   * @return string
+   */
+  public function prepareTtl($ttl) {
+    if (self::MAX_TTL < $ttl) {
+      return (time() + $ttl);
+    }
+    return $ttl;
   }
 }

@@ -5,6 +5,8 @@ class Memcache implements StoreInterface {
 
   private $memcache;
 
+  const MAX_TTL = 2592000;
+
   public function __construct(\Memcache $memcache) {
     $this->memcache = $memcache;
   }
@@ -27,6 +29,7 @@ class Memcache implements StoreInterface {
 
   public function set($key, $value, $ttl = 0) {
     $key = $this->prepareKey($key);
+    $ttl = $this->prepareTtl($ttl);
     return $this->memcache->set($key, $value, 0, $ttl);
   }
 
@@ -53,6 +56,7 @@ class Memcache implements StoreInterface {
 
   public function setMulti($values, $ttl = 0) {
     $result = 1;
+    $ttl = $this->prepareTtl($ttl);
     foreach($values as $key => $value) {
       $result &= $this->set($key, $value, $ttl);
     }
@@ -61,6 +65,7 @@ class Memcache implements StoreInterface {
 
   public function add($key, $value, $ttl = 0) {
     $key = $this->prepareKey($key);
+    $ttl = $this->prepareTtl($ttl);
     return $this->memcache->add($key, $value, 0, $ttl);
   }
 
@@ -78,5 +83,19 @@ class Memcache implements StoreInterface {
 
   public function isSupported() {
     return extension_loaded('memcache');
+  }
+
+  /**
+   * When TTL exceeds 2592000 (30 days) then ttl must be set in Unix timestamp
+   * 
+   * See ticket #4022 for details.
+   * @param string $key
+   * @return string
+   */
+  public function prepareTtl($ttl) {
+    if (self::MAX_TTL < $ttl) {
+      return (time() + $ttl);
+    }
+    return $ttl;
   }
 }
