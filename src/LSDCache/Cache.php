@@ -78,10 +78,11 @@ class Cache {
    * @return bool
    */
   private function unlock($key) {
-    if (isset($this->active_locks[$key])) {
+    $deleted = $this->store->delete($this->lockKey($key));
+    if (true === $deleted && isset($this->active_locks[$key])) {
       unset($this->active_locks[$key]);
     }
-    return $this->store->delete($this->lockKey($key));
+    return $deleted;
   }
 
   public function unlockActiveLocks() {
