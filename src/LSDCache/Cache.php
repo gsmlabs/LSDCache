@@ -20,20 +20,23 @@ class Cache {
     return $this->store;
   }
 
-  public function set($key, $value, $ttl = 0, $generation_time = NULL) {
-    $vo = new Value($value, $ttl, $generation_time);
-    $result = $this->store->set($key, $vo, $vo->getTtl() + $vo->getGenerationTime());
+  public function set($key, $value, $ttl = 0) {
+    $vo = new Value($value, $ttl);
+
+    //real ttl adds to ttl time for stale cache
+    $real_ttl =  (0 < $vo->getTtl()) ? (2 * $vo->getTtl()) : $vo->getTtl();
+    $result = $this->store->set($key, $vo, $real_ttl);
     $this->unlock($key);
     return $result;
   }
 
-  public function get($key) {
+  public function get($key, $lock_ttl = null) {
     $vo = $this->store->get($key);
     if ($this->isCacheValue($vo) && (!$vo->isExpired())) {
       return $vo->getValue();
     }
-
-    $locked = $this->lock($key, ($this->isCacheValue($vo) ? $vo->getGenerationTime() : $this->default_lock_ttl));
+   
+    $locked = $this->lock($key, (0 < $lock_ttl) ? $lock_ttl : $this->default_lock_ttl);
 
     if (!$locked) {
       if ($this->isCacheValue($vo)) {
@@ -112,5 +115,4 @@ class Cache {
   public function setDeadlockHandler(DeadlockHandler\DeadlockHandlerInterface $deadlock_handler) {
     $this->deadlock_handler = $deadlock_handler;
   }
-
 }

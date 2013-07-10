@@ -17,27 +17,12 @@ class ValueTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($ttl, $vo->getTtl());
   }
 
-  public function testGetGenerationTime() {
-    $value = 'błaszczykowski';
-    $ttl = 3600;
-    $gtime = 30;
-    $vo = new Value($value, $ttl, $gtime);
-    $this->assertEquals($gtime, $vo->getGenerationTime());
-  }
-
   public function testGetExpirationTime() {
     $value = 'piszczek';
     $ttl = 3600;
     $expiration_timestamp = time() + $ttl;
     $vo = new Value($value, $ttl);
     $this->assertEquals($expiration_timestamp, $vo->getExpirationTimestamp());
-  }
-
-  public function testIfNotProvidedGenerationTimeEqualsToTtl() {
-    $value = 'barrios';
-    $ttl = 3600;
-    $vo = new Value($value, $ttl);
-    $this->assertEquals($ttl, $vo->getGenerationTime());
   }
 
   public function testIsExpired() {

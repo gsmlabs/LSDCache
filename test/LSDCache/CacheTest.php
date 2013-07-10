@@ -69,16 +69,24 @@ class CacheTest extends \PHPUnit_Framework_TestCase {
     $this->assertFalse($store->get($cache->lockKey($key)));
   }
 
-  public function testGetsStaleValueWhenExpiredAndLockIsSet() {
+  public function testGetsNoValueWhenExpired() {
     $key = 'madrid';
     $value = 'real';
 
     $store = new Store\PhpArray();
     $cache = new Cache($store);
+    $cache->set($key, $value, -1); // expired value    
+    $this->assertFalse($store->get($key));
+  }
 
-    $cache->set($key, $value, -1, 10); // expired value    
-    $store->set($cache->lockKey($key), true); // other process sets a lock
-    $this->assertEquals($value, $cache->get($key));
+  public function testGetsNoValueWhenExpiredAndLockIsNotSet() {
+    $key = 'madrid';
+    $value = 'real';
+
+    $store = new Store\PhpArray();
+    $cache = new Cache($store);
+    $cache->set($key, $value, -1); // expired value    
+    $this->assertFalse($cache->get($cache->lockKey($key)));
   }
 
   public function testReturnsFalseWhenLockIsSetAndStaleValueIsNotPresent() {

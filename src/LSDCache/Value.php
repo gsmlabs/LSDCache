@@ -8,10 +8,12 @@ class Value {
   private $generation_time;
   private $expiration_timestamp;
 
-  public function  __construct($value, $ttl = 0, $generation_time = NULL) {
+  public function  __construct($value, $ttl = 0) {
+    if (isset($params[2])) {
+      \trigger_error("Param 'genaration_time' is not supported anymore", E_DEPRECATED);
+    }
     $this->value = $value;
     $this->ttl = $ttl;
-    $this->generation_time = $generation_time ? $generation_time : $ttl;
     $this->expiration_timestamp = time() + $ttl;
   }
 
@@ -21,10 +23,6 @@ class Value {
 
   public function getTtl() {
     return $this->ttl;
-  }
-
-  public function getGenerationTime() {
-    return $this->generation_time;
   }
 
   public function getExpirationTimestamp() {
@@ -37,5 +35,4 @@ class Value {
     }
     return ($now_timestamp > $this->getExpirationTimestamp());
   }
-
 }
