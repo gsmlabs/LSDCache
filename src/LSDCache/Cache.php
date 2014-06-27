@@ -52,10 +52,12 @@ class Cache {
 
   public function getOrSet($key, $callback, $ttl = 0) {
     $result = $this->get($key);
-    if ($result === false) {
-      $value = call_user_func($callback);
-      return $this->set($key, $value, $ttl);
+    if ($result !== false) {
+      return $result;
     }
+ 
+    $value = call_user_func($callback);
+    return $this->set($key, $value, $ttl);
   }
 
   public function delete($key) {
